@@ -1,51 +1,51 @@
-function label_create(ele_name,attr_name_1,attr_value_2,content,ele_Class){
+function label_create(ele_name, attr_name_1, attr_value_2, content, ele_Class) {
     var ele = document.createElement(ele_name);
-    ele.setAttribute(attr_name_1,attr_value_2);
-    if(ele_Class!==""){
-    ele.className=ele_Class;
+    ele.setAttribute(attr_name_1, attr_value_2);
+    if (ele_Class !== "") {
+        ele.className = ele_Class;
     }
-    if(content!==""){
+    if (content !== "") {
         ele.innerHTML = content;
     }
-     return ele;
+    return ele;
 }
-function th_create(ele_name,attr_name_1,attr_value_1,content){
+function th_create(ele_name, attr_name_1, attr_value_1, content) {
     var th = document.createElement(ele_name);
-    th.setAttribute(attr_name_1,attr_value_1);
-    th.innerHTML=content;
+    th.setAttribute(attr_name_1, attr_value_1);
+    th.innerHTML = content;
     return th;
 }
 //Main Div
-  var main_div=document.createElement("div");
-  main_div.className="container";
-    //Heading
-var head1=document.createElement("h1");
-head1.id="title";
-head1.innerHTML="PAGINATION";
+var main_div = document.createElement("div");
+main_div.className = "container";
+//Heading
+var head1 = document.createElement("h1");
+head1.id = "title";
+head1.innerHTML = "PAGINATION";
 //Description
-var descr = label_create("p","id","description","This Table with Pagination Created Using DOM...","text-center");
+var descr = label_create("p", "id", "description", "This Table with Pagination Created Using DOM...", "text-center");
 //table creation
-var table_div=document.createElement("div");
-table_div.className="table-responsive";
-var table1=document.createElement("table");
-table1.className="table table-bordered";
-table1.id="table";
-var thead1=document.createElement("thead");
-var tbody1=document.createElement("tbody");
-tbody1.id="table-body";
-var tr1=document.createElement("tr");
-var th1=th_create("th","scope","col","Id")
-var th2=th_create("th","scope","col","Name")
-var th3=th_create("th","scope","col","Email")
-tr1.append(th1,th2,th3);
+var table_div = document.createElement("div");
+table_div.className = "table-responsive";
+var table1 = document.createElement("table");
+table1.className = "table table-bordered";
+table1.id = "table";
+var thead1 = document.createElement("thead");
+var tbody1 = document.createElement("tbody");
+tbody1.id = "table-body";
+var tr1 = document.createElement("tr");
+var th1 = th_create("th", "scope", "col", "Id")
+var th2 = th_create("th", "scope", "col", "Name")
+var th3 = th_create("th", "scope", "col", "Email")
+tr1.append(th1, th2, th3);
 thead1.append(tr1);
-table1.append(thead1,tbody1);
+table1.append(thead1, tbody1);
 table_div.append(table1);
 //pagination creation
-var pagi_div=label_create("div","id","buttons","","d-flex justify-content-center");
-var pagi_ul=label_create("ul","id","pagination","","pagination");
+var pagi_div = label_create("div", "id", "buttons", "", "d-flex justify-content-center");
+var pagi_ul = label_create("ul", "id", "pagination", "", "pagination");
 pagi_div.append(pagi_ul);
-main_div.append(head1,descr,table_div,pagi_div);
+main_div.append(head1, descr, table_div, pagi_div);
 document.body.append(main_div)
 
 // Sample data array with 100 items
@@ -553,13 +553,14 @@ const data = [
 ]
 // Variables to track the current page
 let currentPage = 1;
+let totalPages=0;
 const itemsPerPage = 10;
 
 // Function to render table rows
 function renderTableRows() {
     const tableBody = document.getElementById('table-body');
     tableBody.innerHTML = '';
-
+console.log(currentPage)
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
 
@@ -567,6 +568,33 @@ function renderTableRows() {
         const row = `<tr><td>${data[i].id}</td><td>${data[i].name}</td><td>${data[i].email}</td></tr>`;
         tableBody.innerHTML += row;
     }
+  
+}
+function removeactive(){
+    var li = document.querySelectorAll("li");
+    //  console.log(currentPage)
+      for (let i = 0; i < li.length; i++) {
+          li[i].classList.remove("active");
+      }
+      if(currentPage=="1"){
+          li[0].classList.add("disabled");
+          li[1].classList.add("disabled");
+          li[2].classList.add("active");
+      }
+      else if(currentPage==totalPages){
+          li[totalPages+2].classList.add("disabled");
+          li[totalPages+3].classList.add("disabled");
+          li[totalPages+1].classList.add("active");
+          li[0].classList.remove("disabled");
+          li[1].classList.remove("disabled");
+         }
+      else{
+          li[0].classList.remove("disabled");
+          li[1].classList.remove("disabled");
+          li[totalPages+2].classList.remove("disabled");
+          li[totalPages+3].classList.remove("disabled");
+          li[currentPage+1].classList.add("active");
+      }
 }
 
 // Function to render pagination links
@@ -574,11 +602,11 @@ function renderPaginationLinks() {
     const pagination = document.getElementById('pagination');
     pagination.innerHTML = '';
 
-    const totalPages = Math.ceil(data.length / itemsPerPage);
+    totalPages = Math.ceil(data.length / itemsPerPage);
 
     // First button
     const FirstLi = document.createElement('li');
-    FirstLi.className = 'page-item';
+    FirstLi.className = 'page-item disabled';
     const firstA = document.createElement('a');
     firstA.className = 'page-link';
     firstA.href = '#';
@@ -586,15 +614,17 @@ function renderPaginationLinks() {
     firstA.textContent = 'First';
     firstA.addEventListener('click', () => {
         if (currentPage > 1) {
-            currentPage=1;
+            currentPage = 1;
             renderTableRows();
+            removeactive();
+            //FirstLi.classList.add("active");
         }
     });
     FirstLi.appendChild(firstA);
     pagination.appendChild(FirstLi);
-// Previous button
+    // Previous button
     const prevLi = document.createElement('li');
-    prevLi.className = 'page-item';
+    prevLi.className = 'page-item disabled';
     const prevA = document.createElement('a');
     prevA.className = 'page-link';
     prevA.href = '#';
@@ -604,25 +634,35 @@ function renderPaginationLinks() {
         if (currentPage > 1) {
             currentPage--;
             renderTableRows();
+            removeactive();
+            //prevLi.classList.add("active");
         }
     });
     prevLi.appendChild(prevA);
     pagination.appendChild(prevLi);
-// Pagination links
-for (let i = 1; i <= totalPages; i++) {
-    const li = document.createElement('li');
-    li.className = 'page-item';
-    const a = document.createElement('a');
-    a.className = 'page-link';
-    a.href = '#';
-    a.textContent = i;
-    a.addEventListener('click', () => {
-        currentPage = i;
-        renderTableRows();
-    });
-    li.appendChild(a);
-    pagination.appendChild(li);
-}
+    // Pagination links
+    for (let i = 1; i <= totalPages; i++) {
+        const li = document.createElement('li');
+        if(i==1){
+            li.className = 'page-item active';
+        }
+        else{
+            li.className = 'page-item';
+        }
+        
+        const a = document.createElement('a');
+        a.className = 'page-link';
+        a.href = '#';
+        a.textContent = i;
+        a.addEventListener('click', () => {
+            currentPage = i;
+            renderTableRows();
+            removeactive();
+            li.classList.add("active");
+        });
+        li.appendChild(a);
+        pagination.appendChild(li);
+    }
     // Next button
     const nextLi = document.createElement('li');
     nextLi.className = 'page-item';
@@ -635,6 +675,8 @@ for (let i = 1; i <= totalPages; i++) {
         if (currentPage < totalPages) {
             currentPage++;
             renderTableRows();
+            removeactive();
+            //nextLi.classList.add("active");
         }
     });
     nextLi.appendChild(nextA);
@@ -649,8 +691,10 @@ for (let i = 1; i <= totalPages; i++) {
     lastA.textContent = 'Last';
     lastA.addEventListener('click', () => {
         if (currentPage < totalPages) {
-            currentPage=totalPages;
+            currentPage = totalPages;
             renderTableRows();
+            removeactive();
+            //LastLi.classList.add("active");
         }
     });
     LastLi.appendChild(lastA);
