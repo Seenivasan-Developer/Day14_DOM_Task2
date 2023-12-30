@@ -580,7 +580,9 @@ function removeactive(){
           li[0].classList.add("disabled");
           li[1].classList.add("disabled");
           li[2].classList.add("active");
-      }
+          li[totalPages+2].classList.remove("disabled");
+          li[totalPages+3].classList.remove("disabled");
+          }
       else if(currentPage==totalPages){
           li[totalPages+2].classList.add("disabled");
           li[totalPages+3].classList.add("disabled");
